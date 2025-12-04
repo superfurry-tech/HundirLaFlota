@@ -1,5 +1,7 @@
 package hundirLaFlota;
 
+import java.util.Scanner;
+
 public class Utilidades {
 
   public static int convertirFila(String coord) {
@@ -42,4 +44,14 @@ public class Utilidades {
   public static int numeroAleatorio (int min, int max) {
     return (int) ((Math.random() * (max - min + 1)) + min);
   }
+
+  public static String pedirCoordenada (Scanner scanner){
+    System.out.println("Introduce coordenada de disparo");
+    String coord = scanner.nextLine().trim().toUpperCase();
+    return coord;
+  }
 }
+
+// sc.nextLine(): nos da la siguiente línea del usuario.
+// sc.nextLine().trim(): a esa siguiente línea, le aplica trim, que elimina espacios en blanco y \n antes y después
+// sc.nextLine().trim().toUpperCase: convierte la cadena que devolvió trim() a mayúsculas

@@ -33,9 +33,6 @@ public class Main {
     int[] impactosJugador = new int[numBarcos];
     int[] impactosCPU = new int[numBarcos];
 
-    int filaValida = -1;
-    int columnaValida = -1;
-
     // Inicializar los arrays impactosJugador e impactosCPU a 0
     // (aunque Java ya los inicializa a 0, hacedlo explícitamente con un for)
     for (int i = 0; i < impactosJugador.length; i++) {
@@ -64,38 +61,39 @@ public class Main {
         System.out.println("Turno del JUGADOR");
         // Mostrar tableros relevantes
         System.out.println("Tu tablero (tus barcos):");
-        // TODO: imprime el tablero
+        Tablero.mostrarTableroConBarcos(tableroBarcosJugador, tableroDisparosCPU);
 
         System.out.println("Tus disparos sobre la CPU:");
-        // TODO: imprime los disparos sobre la CPU (no se pueden ver los barcos de la CPU!)
-
-        // Pedir coordenada
-        System.out.print("Introduce coordenada (ej. A5): ");
-        // sc: es un scanner.
-        // sc.nextLine(): nos da la siguiente línea del usuario.
-        // sc.nextLine().trim(): a esa siguiente línea, le aplica trim, que elimina espacios en blanco y \n antes y después
-        // sc.nextLine().trim().toUpperCase: convierte la cadena que devolvió trim() a mayúsculas
-        String coord = sc.nextLine().trim().toUpperCase();
+        Tablero.mostrarTableroDisparos(tableroDisparosJugador);
 
         // TODO: Validar la coordenada (formato mínimo, longitud, etc.)
-        // TODO: Convertir la coordenada (ej. 'A5') en fila y columna (int)
+        // TODO: Convertir la coordenada (ej. 'A5') en fila y columna (int) HECHO
         // TODO: si no es una coordenada válida, hay que volver a pedirla.
         // TODO: si el formato de la coordenada no es válido, vuelve a pedirla.
-        int fila = Utilidades.convertirFila(coord);
-        int columna = Utilidades.convertirColumna(coord);
 
-        // Cuando un jugador da una coordenada válida en formato (esto es,
-        // letra+número), pero fuera del tablero, pierde el turno
-        if (!Tablero.esCoordenadaValida(fila, columna, FILAS, COLUMNAS)) {
-          System.out.println("Coordenada fuera del tablero. Pierdes el turno.");
-        } else if (Disparos.yaDisparado(tableroDisparosJugador, fila, columna)) {
-          System.out.println("Ya habías disparado ahí. Pierdes el turno.");
-        } else {
-          boolean hundido = Disparos.procesarDisparo(filaValida, columnaValida, tableroBarcosCPU, tableroDisparosJugador, impactosCPU, tamanosBarcos);
-          if (hundido){
-            System.out.println("¡Barco hundido!");
+        int fila = -1;
+        int columna = -1;
+        boolean formatoValido = false;
+        do {
+          // Pedir coordenada. AÑADO FUNCIÓN EN UTILIDADES
+          String coord = Utilidades.pedirCoordenada(sc);
+          fila = Utilidades.convertirFila(coord);
+          columna = Utilidades.convertirColumna(coord);
+
+          if (fila == -1 || columna == -1){
+            System.out.println("Formato incorrecto. Inténtalo de nuevo.");
+          } else {
+            formatoValido = true;
           }
-        }
+        }while (!formatoValido);
+
+          if (!Tablero.esCoordenadaValida(fila, columna, FILAS, COLUMNAS)){
+            System.out.println("Coordenada fuera del tablero. Pierdes el turno.");
+          } else if (Disparos.yaDisparado(tableroDisparosJugador, fila, columna)) {
+            System.out.println("Ya habías disparado ahí. Pierdes el turno.");
+          } else {
+            // Y AQUÍ EMPEZARÍA A METER EL DISPARO
+          }
 
         // TODO: Comprobar si la CPU ha perdido todos los barcos con la función adecuada
         // si es así, configura el final de la partida y di el resultado.
