@@ -29,15 +29,15 @@ public class Main {
     // el primer barco de "3" lleva 1 impacto, el array de impactos será:
     // [2, 0, 1, 0, 0]. Si en algún momento algún elemento del array de impactos equivale al array de
     // tamaños, ese barco está hundido:
-    // [5, 3, 2, 2, 2]  en los impactos implica que el barco de 5 está hundido, y el barco de 2 también.
+    // [5, 3, 2, 2, 2] en los impactos implica que el barco de 5 está hundido, y el barco de 2 también.
     int[] impactosJugador = new int[numBarcos];
     int[] impactosCPU = new int[numBarcos];
 
     // Inicializar los arrays impactosJugador e impactosCPU a 0
     // (aunque Java ya los inicializa a 0, hacedlo explícitamente con un for)
     for (int i = 0; i < impactosJugador.length; i++) {
-      impactosJugador [i] = 0;
-      impactosCPU [i] = 0;
+      impactosJugador[i] = 0;
+      impactosCPU[i] = 0;
     }
 
     // Colocar barcos
@@ -75,41 +75,50 @@ public class Main {
         int columna = -1;
         boolean formatoValido = false;
         do {
-          // Pedir coordenada. AÑADO FUNCIÓN EN UTILIDADES
+          // Pedir coordenada. AÑADO FUNCIÓN pedirCoordenada EN UTILIDADES
           String coord = Utilidades.pedirCoordenada(sc);
           fila = Utilidades.convertirFila(coord);
           columna = Utilidades.convertirColumna(coord);
 
-          if (fila == -1 || columna == -1){
+          if (fila == -1 || columna == -1) {
             System.out.println("Formato incorrecto. Inténtalo de nuevo.");
           } else {
             formatoValido = true;
           }
-        }while (!formatoValido);
+        } while (!formatoValido);
 
-          if (!Tablero.esCoordenadaValida(fila, columna, FILAS, COLUMNAS)){
-            System.out.println("Coordenada fuera del tablero. Pierdes el turno.");
-          } else if (Disparos.yaDisparado(tableroDisparosJugador, fila, columna)) {
-            System.out.println("Ya habías disparado ahí. Pierdes el turno.");
-          } else {
-            // Y AQUÍ EMPEZARÍA A METER EL DISPARO
+        if (!Tablero.esCoordenadaValida(fila, columna, FILAS, COLUMNAS)) {
+          System.out.println("Coordenada fuera del tablero. Pierdes el turno.");
+        } else if (Disparos.yaDisparado(tableroDisparosJugador, fila, columna)) {
+          System.out.println("Ya habías disparado ahí. Pierdes el turno.");
+        } else {
+          // TODO: usa la función de disparar para procesar el disparo.
+          // Dile al usuario si ha hundido un barco.
+          if (Disparos.procesarDisparo(fila, columna, tableroBarcosCPU, tableroDisparosJugador, impactosCPU, tamanosBarcos)) {
+            System.out.println("¡Hundido!");
           }
-
-        // TODO: Comprobar si la CPU ha perdido todos los barcos con la función adecuada
-        // si es así, configura el final de la partida y di el resultado.
+          // TODO: Comprobar si la CPU ha perdido todos los barcos con la función adecuada
+          // si es así, configura el final de la partida y di el resultado.
+          if (Barcos.todosHundidos(impactosCPU, tamanosBarcos)) {
+            System.out.println("¡Era el último! ¡¡¡ HAS GANADO LA PARTIDA!!!");
+            finPartida = true;
+          }
+        }
 
       } else {
-        System.out.println("Turno de la CPU");
         // Hacemos el turno de la CPU
-        int filaCPU = Utilidades.numeroAleatorio(0, FILAS - 1);
-        int columnaCPU = Utilidades.numeroAleatorio(0, COLUMNAS - 1);
-
         // TODO: si ya había disparado a la coordenada, no ejecutamos el disparo, generamos otra
         // coordenada.
-
+        System.out.println("Turno de la CPU");
+        int filaCPU;
+        int columnaCPU;
+        do {
+          filaCPU = Utilidades.numeroAleatorio(0, FILAS - 1);
+          columnaCPU = Utilidades.numeroAleatorio(0, COLUMNAS - 1);
+        } while (Disparos.yaDisparado(tableroDisparosCPU, filaCPU, columnaCPU));
         System.out.println("La CPU dispara a (" + filaCPU + ", " + columnaCPU + ")");
 
-        // Ejecutamos el disparo de la CPU
+// Ejecutamos el disparo de la CPU
         boolean barcoHundidoJugador = Disparos.procesarDisparo(
             filaCPU,
             columnaCPU,
@@ -131,9 +140,10 @@ public class Main {
       }
 
       // Cambiar turno
-      turnoJugador = !turnoJugador;
+      if (!finPartida) {
+        turnoJugador = !turnoJugador;
+      }
     }
-
     sc.close();
     System.out.println("Fin de la partida.");
   }

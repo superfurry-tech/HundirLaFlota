@@ -111,7 +111,7 @@ public class Tablero {
    * Comprueba si una coordenada está dentro del tablero. Devuelve "true" si está, "false" si no está.
    */
   public static boolean esCoordenadaValida(int fila, int columna, int filas, int columnas) {
-    if (fila >=0 && filas <Main.FILAS && columna >=0 && columnas <Main.COLUMNAS){
+    if (fila >=0 && fila <filas && columna >=0 && columna < columnas){
       return true;
     }
     return false;

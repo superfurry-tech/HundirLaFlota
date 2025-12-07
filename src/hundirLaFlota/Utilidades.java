@@ -12,7 +12,7 @@ public class Utilidades {
       char caracter = coord.charAt(i);
       if (caracter < '0' || caracter > '9'){
         return -1;
-      } parteFila = parteFila + coord.charAt(i);
+      } parteFila = parteFila + caracter;
     }
 
     if (parteFila.isEmpty()){ // Asegura que escribe fila y no solo letra
@@ -22,20 +22,16 @@ public class Utilidades {
       digito = parteFila.charAt(i) - '0'; // Resto 0 (con código ASCII 48) para pasar de carácter a int. Los números están, siguiendo la numeración, a continuación del 0.
       filaFinal = (filaFinal * 10) + digito; // Mueve el acumulado una posición a la izquierda (x10) y añade el nuevo dígito.
     }
-    if (filaFinal >=0 && filaFinal <=9) {
       return filaFinal;
-    } else {
-      return -1;
-    }
   }
 
   public static int convertirColumna(String coord) {
     if (coord == null || coord.isEmpty()) {
       return -1;
     }
-    char letra = coord.charAt(0); // Extrae letra de columna.
+    char letra = Character.toUpperCase(coord.charAt(0)); // Extrae letra de columna.
     int columnaFinal = letra - 'A'; // Convierte letra a número para ver la "distancia" a A.
-    if (columnaFinal < 0 || columnaFinal > 9) {
+    if (columnaFinal < 0) {
       return -1;
     }
     return columnaFinal;
